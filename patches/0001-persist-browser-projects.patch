@@ -1,0 +1,21 @@
+diff --git a/source/blender/windowmanager/intern/wm_files.cc b/source/blender/windowmanager/intern/wm_files.cc
+--- a/source/blender/windowmanager/intern/wm_files.cc
++++ b/source/blender/windowmanager/intern/wm_files.cc
+@@ -4316,6 +4316,17 @@
+     return OPERATOR_CANCELLED;
+   }
+ 
++#ifdef __EMSCRIPTEN__
++  if (strncmp(filepath, "/projects/", sizeof("/projects/") - 1) == 0) {
++    MAIN_THREAD_EM_ASM(
++        {
++          if (typeof window !== "undefined" && window.blenderPersistProject) {
++            window.blenderPersistProject(UTF8ToString($0));
++          }
++        },
++        filepath);
++  }
++#endif
+   const char *filename = BLI_path_basename(filepath);
+ 
+   if (is_incremental) {

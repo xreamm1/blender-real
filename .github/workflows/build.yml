@@ -1,0 +1,30 @@
+name: Build Blender for the browser
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost
+          df -h .
+      - name: Build with the pinned Emscripten image
+        run: |
+          docker build -t blender-real .
+          docker run --rm --init --mount "type=bind,src=$PWD,dst=/project" blender-real
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: blender-browser
+          path: dist/
+          if-no-files-found: error
+          compression-level: 0
