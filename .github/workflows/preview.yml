@@ -26,6 +26,7 @@ jobs:
               --header 'Accept: application/octet-stream' > upstream-preview.tar.gz
             python3 prepare-preview.py upstream-preview.tar.gz dist
           fi
+          cp src/preview.js dist/preview.js
           test -s dist/index.html
           test -s dist/blender.wasm.zst
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b

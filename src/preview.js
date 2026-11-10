@@ -21,6 +21,10 @@ try {
     location.reload();
   } else {
     window.__BARGS = ["--disable-autoexec"];
+    window.__CAPENV = {
+      MESA_GL_VERSION_OVERRIDE: "4.3",
+      MESA_GLSL_VERSION_OVERRIDE: "430",
+    };
     await import(document.querySelector("script[data-engine]").dataset.engine);
   }
 } catch (error) {
