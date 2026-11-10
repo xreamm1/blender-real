@@ -45,15 +45,19 @@ button, input { font: inherit; }
   text-align: center;
 }
 
-.loader-blender { width: 84px; height: 84px; }
-.loader-mark { animation: loader-hop 900ms steps(1) infinite; }
+.loader-blender {
+  --pixel: 4px;
+  width: calc(24 * var(--pixel));
+  height: calc(24 * var(--pixel));
+  animation: loader-hop 900ms steps(1) infinite;
+}
 @media (min-width: 700px) and (min-height: 500px) {
-  .loader-blender { width: 126px; height: 126px; }
+  .loader-blender { --pixel: 5px; }
 }
 
 @keyframes loader-hop {
-  25%, 75% { transform: translateY(-1px); }
-  50% { transform: translateY(-3px); }
+  25%, 75% { transform: translateY(calc(-1 * var(--pixel))); }
+  50% { transform: translateY(calc(-2 * var(--pixel))); }
 }
 
 .launch-panel { width: 100%; }
@@ -82,7 +86,7 @@ button, input { font: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader-mark, .progress-track:not([aria-valuenow]) .progress-fill { animation: none; }
+  .loader-blender, .progress-track:not([aria-valuenow]) .progress-fill { animation: none; }
 }
 
 .progress-meta, .start-btn {
