@@ -96,7 +96,28 @@ function startupFailed(error) {
 }
 
 if (!window.crossOriginIsolated || typeof SharedArrayBuffer === "undefined") {
-  startupFailed(new Error("Blender needs a secure, cross-origin isolated page. Serve it with the required COOP and COEP headers."));
+  try {
+    const workers = navigator.serviceWorker;
+    if (!workers || workers.controller) {
+      throw new Error("Blender needs a secure, cross-origin isolated page. Serve it with the required COOP and COEP headers.");
+    }
+    status("Preparing browser isolation…");
+    await workers.register("./isolation-worker.js");
+    if (!workers.controller) {
+      await new Promise((resolve, reject) => {
+        const activate = () => { clearTimeout(timeout); resolve(); };
+        const timeout = setTimeout(() => {
+          workers.removeEventListener("controllerchange", activate);
+          reject(new Error("Browser isolation timed out. Reload the page to try again."));
+        }, 15000);
+        workers.addEventListener("controllerchange", activate, { once: true });
+      });
+    }
+    window.location.reload();
+    await new Promise(() => {});
+  } catch (error) {
+    startupFailed(error);
+  }
 }
 
 /* ---- Combined download manager: the asset tar and the engine wasm (both

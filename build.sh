@@ -4,6 +4,8 @@ set -euo pipefail
 project=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 harness_ref=e73ddff77079dc96b2a7af6e7b843a7ecfbbb11a
 blender_ref=fe16888d9e1e5eee3070535a221dd9ae2d671a77
+harness_url=https://github.com/xreamm1/blender-wasm.git
+blender_url=https://github.com/xreamm1/blender.git
 sdk=${EMSDK_ROOT:-/emsdk}
 jobs=${BUILD_JOBS:-4}
 mkdir -p "$project/work"
@@ -18,9 +20,10 @@ ulimit -s unlimited
 
 if [[ ! -d upstream/.git ]]; then
   git init -q upstream
-  git -C upstream remote add origin https://github.com/HeyPuter/blender-wasm.git
+  git -C upstream remote add origin "$harness_url"
 fi
 cd upstream
+git remote set-url origin "$harness_url"
 if ! git cat-file -e "$harness_ref^{commit}" 2>/dev/null; then
   git fetch --depth 1 origin "$harness_ref"
 fi
@@ -29,7 +32,8 @@ ln -sfnT "$sdk" emsdk
 export PATH="$sdk/upstream/emscripten:$PATH"
 test -x "$sdk/upstream/emscripten/emcc"
 
-make blender
+make blender BLENDER_URL="$blender_url"
+git -C blender remote set-url origin "$blender_url"
 if [[ $(git -C blender rev-parse HEAD) != "$blender_ref" ]]; then
   echo "Unexpected Blender source revision in $(pwd)/blender" >&2
   exit 1
@@ -42,7 +46,8 @@ fi
 # This SDK uses emdawnwebgpu (the Blender fork selects the port in CMake).
 # Ninja's stock executable link lacks the demo WasmFS symbols. Its final
 # command is reused by the release linker with the required browser flags.
-make configure-blender EMSDK="$sdk" NPROC="$jobs" \
+make configure-blender EMSDK="$sdk" NPROC="$jobs" BLENDER_URL="$blender_url" \
+  WASM_CFLAGS="$WASM_CFLAGS" WASM_CXXFLAGS="$WASM_CXXFLAGS" \
   WASM_COMPAT="-O3 -pthread -fexceptions -include $(pwd)/cmake/wasm_compat.h"
 if ! ninja -j "$jobs" -C build-blender blender 2>&1 | tee "$project/work/ninja.log"; then
   grep -Eq '^FAILED:.* bin/blender\.js( |$)' "$project/work/ninja.log" || exit 1
@@ -56,6 +61,7 @@ rm -f demo/public/favicon.svg demo/public/blender-browser-card-354898ad.png
 cp -f "$project/src/index.html" "$project/src/package.json" \
   "$project/src/package-lock.json" "$project/src/vite.config.js" demo/
 cp -f "$project/src/src/"* demo/src/
+cp -f "$project/src/public/isolation-worker.js" demo/public/
 (
   cd demo
   npm ci --no-audit --no-fund
