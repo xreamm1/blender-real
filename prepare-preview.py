@@ -19,23 +19,27 @@ def prepare(archive, output):
     output.mkdir(parents=True, exist_ok=True)
     (output / "assets").mkdir(exist_ok=True)
     with tarfile.open(archive) as bundle:
-        names = bundle.getnames()
-        script, = [name for name in names if re.fullmatch(r"dist/assets/index-[\w-]+\.js", name)]
-        css, = [name for name in names if re.fullmatch(r"dist/assets/index-[\w-]+\.css", name)]
-        for name in (script, css, "dist/blender.js", "dist/blender.wasm.zst",
+        script, = [name for name in bundle.getnames()
+                   if re.fullmatch(r"dist/assets/index-[\w-]+\.js", name)]
+        for name in (script, "dist/blender.js", "dist/blender.wasm.zst",
                      "dist/assets.tar.zst", "dist/manifest.json", "dist/wgsl-cache-gl.bin.zst",
                      "dist/wgsl-cache.json"):
             with bundle.extractfile(name) as source, (output / name[5:]).open("wb") as target:
                 shutil.copyfileobj(source, target)
+    refresh(output)
 
+
+def refresh(output):
+    script, = (output / "assets").glob("index-*.js")
     page = (ROOT / "src/index.html").read_text(encoding="utf-8")
     page = re.sub(r"    <details id=\"browser-projects\".*?</details>\n", "", page, flags=re.S)
-    page = page.replace("/src/styles.css", f"./{css[5:]}")
+    page = page.replace("/src/styles.css", "./loader.css")
     page = page.replace(
         '<script type="module" src="/src/main.js"></script>',
-        f'<script type="module" data-engine="./{script[5:]}" src="./preview.js"></script>',
+        f'<script type="module" data-engine="./assets/{script.name}" src="./preview.js"></script>',
     )
     (output / "index.html").write_text(page, encoding="utf-8")
+    shutil.copyfile(ROOT / "src/src/styles.css", output / "loader.css")
     shutil.copyfile(ROOT / "src/public/isolation-worker.js", output / "isolation-worker.js")
     shutil.copyfile(ROOT / "src/preview.js", output / "preview.js")
     shutil.copyfile(ROOT / "LICENSE", output / "LICENSE")
@@ -43,7 +47,10 @@ def prepare(archive, output):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("archive", type=Path)
+    parser.add_argument("archive", type=Path, nargs="?")
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
-    prepare(args.archive, args.output)
+    if args.archive:
+        prepare(args.archive, args.output)
+    else:
+        refresh(args.output)

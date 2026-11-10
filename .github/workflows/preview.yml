@@ -21,12 +21,12 @@ jobs:
             echo 'eeff91dedf11a8eb107e2a41fa79d50eb1389a2fd62fcf2d76675579601ecd2c  blender-real-preview.tar.gz' | sha256sum --check
             mkdir dist
             tar -xzf blender-real-preview.tar.gz -C dist
+            python3 prepare-preview.py dist
           else
             gh api repositories/1285398317/releases/assets/658277106 \
               --header 'Accept: application/octet-stream' > upstream-preview.tar.gz
             python3 prepare-preview.py upstream-preview.tar.gz dist
           fi
-          cp src/preview.js dist/preview.js
           test -s dist/index.html
           test -s dist/blender.wasm.zst
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
