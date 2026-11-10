@@ -51,6 +51,7 @@ fi
 sed 's/^  -O1 /  -O3 /; s/zstd -f --ultra -21 -T0/zstd -f -10 -T2/g' \
   scripts/link_blender_release.sh > scripts/link_blender_real.sh
 BLENDER_GPU=webgpu bash scripts/link_blender_real.sh
+rm -f demo/public/favicon.svg demo/public/blender-browser-card-354898ad.png
 
 cp -f "$project/src/index.html" "$project/src/package.json" \
   "$project/src/package-lock.json" "$project/src/vite.config.js" demo/

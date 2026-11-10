@@ -1,6 +1,6 @@
-# Blender Real
+# Blender Real by xreamm
 
-Build the HeyPuter Blender 5.3 browser port from C/C++ and run its UI in a single browser tab. The pinned Blender fork contains the GHOST web backend, browser input callbacks, OffscreenCanvas window, and native WebGPU rendering backend. This repository adds the container build, frontend, local server, and IndexedDB project library.
+Build the Blender 5.3 browser port from C/C++ and run its UI in a single browser tab. The pinned Blender fork contains the GHOST web backend, browser input callbacks, OffscreenCanvas window, and native WebGPU rendering backend. This repository adds the container build, frontend, local server, and IndexedDB project library.
 
 ## Build and run
 

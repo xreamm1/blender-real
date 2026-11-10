@@ -82,11 +82,6 @@ input {
   gap: 10px;
 }
 
-.nav-brand {
-  display: inline-flex;
-  align-items: center;
-}
-
 .nav-brand-label {
   display: inline-flex;
   align-items: center;
@@ -101,25 +96,6 @@ input {
 
 .nav-brand-label:hover {
   opacity: 0.7;
-}
-
-/* Puter brand blue (not the page's Blender orange): this is the Puter Labs
-   mark, matched to the other Puter Labs demos. */
-.labs-badge {
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(29, 73, 231, 0.09);
-  color: #1d49e7;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.nav-brand img {
-  display: block;
-  height: 30px;
-  width: auto;
 }
 
 .nav-links {
@@ -615,15 +591,6 @@ input {
   font-size: 12px;
   font-weight: 300;
   line-height: 1.45;
-}
-
-/* Puter-branded mode: hide the editable Wisp field, show the fixed note. */
-#stage-card.puter-branded .wisp-field {
-  display: none;
-}
-
-#stage-card.puter-branded .branding-note {
-  display: block;
 }
 
 /* --- startup console (only while launching) ------------------------------ */
