@@ -45,19 +45,19 @@ button, input { font: inherit; }
   text-align: center;
 }
 
-.loader-blender {
+.loader-logos {
   --pixel: 4px;
+  display: flex;
+  align-items: center;
+  gap: calc(3 * var(--pixel));
+}
+.loader-icon {
   width: calc(24 * var(--pixel));
   height: calc(24 * var(--pixel));
-  animation: loader-hop 900ms steps(1) infinite;
 }
+.loader-cross { width: calc(7 * var(--pixel)); height: calc(7 * var(--pixel)); }
 @media (min-width: 700px) and (min-height: 500px) {
-  .loader-blender { --pixel: 5px; }
-}
-
-@keyframes loader-hop {
-  25%, 75% { transform: translateY(calc(-1 * var(--pixel))); }
-  50% { transform: translateY(calc(-2 * var(--pixel))); }
+  .loader-logos { --pixel: 5px; }
 }
 
 .launch-panel { width: 100%; }
@@ -86,7 +86,7 @@ button, input { font: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader-blender, .progress-track:not([aria-valuenow]) .progress-fill { animation: none; }
+  .progress-track:not([aria-valuenow]) .progress-fill { animation: none; }
 }
 
 .progress-meta, .start-btn {

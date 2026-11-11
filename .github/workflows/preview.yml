@@ -17,6 +17,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          python3 -m pip install --disable-pip-version-check zstandard==0.25.0
           if gh release download preview-1 --repo xreamm1/blender-cdn --pattern blender-real-preview.tar.gz; then
             echo 'eeff91dedf11a8eb107e2a41fa79d50eb1389a2fd62fcf2d76675579601ecd2c  blender-real-preview.tar.gz' | sha256sum --check
             mkdir dist
