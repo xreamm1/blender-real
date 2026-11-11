@@ -40,7 +40,7 @@ button, input { font: inherit; }
 .stage-inner {
   display: grid;
   justify-items: center;
-  gap: 16px;
+  gap: 8px;
   width: min(100%, 32rem);
   text-align: center;
 }
@@ -100,16 +100,18 @@ button, input { font: inherit; }
   font-size: 12px;
 }
 
-.panel-ready { display: none; margin-top: 12px; }
+.panel-ready { display: none; margin-top: 8px; }
 #stage-card:is([data-phase="ready"], [data-phase="console"]) .panel-ready { display: block; }
 #stage-card:is([data-phase="ready"], [data-phase="console"]) :is(.progress-track, .progress-meta) { display: none; }
 
 .start-btn {
   min-height: 44px;
   padding: 8px 20px;
-  border: 1px solid #7d7263;
+  border: 1px solid #514a41;
   background: #000;
-  color: #e9dfcf;
+  color: #c3b8a5;
+  font-size: 14px;
+  font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -128,6 +130,7 @@ button, input { font: inherit; }
 
 .startup-console {
   width: 100%;
+  margin-top: 8px;
   color: #a6a099;
   font-size: 12px;
 }
