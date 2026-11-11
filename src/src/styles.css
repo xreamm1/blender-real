@@ -55,7 +55,7 @@ button, input { font: inherit; }
   width: calc(24 * var(--pixel));
   height: calc(24 * var(--pixel));
 }
-.loader-cross { width: calc(7 * var(--pixel)); height: calc(7 * var(--pixel)); }
+.loader-cross { width: calc(6 * var(--pixel)); height: calc(6 * var(--pixel)); }
 @media (min-width: 700px) and (min-height: 500px) {
   .loader-logos { --pixel: 5px; }
 }
